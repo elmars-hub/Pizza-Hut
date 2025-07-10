@@ -6,18 +6,21 @@ function UpdateItemQuantity({ pizzaId, currentQuantity }) {
   const dispatch = useDispatch();
 
   return (
-    <div className="flex items-center gap-2 md:gap-3">
+    <div className="flex items-center gap-2">
       <Button
         type="round"
         onClick={() => dispatch(decreaseItemQuantity(pizzaId))}
+        className="w-8 h-8 p-0 flex items-center justify-center"
       >
         -
       </Button>
-      <span className="text-sm font-medium">{currentQuantity}</span>
-
+      <span className="text-sm font-bold text-stone-800 min-w-[20px] text-center">
+        {currentQuantity}
+      </span>
       <Button
         type="round"
         onClick={() => dispatch(increaseItemQuantity(pizzaId))}
+        className="w-8 h-8 p-0 flex items-center justify-center"
       >
         +
       </Button>

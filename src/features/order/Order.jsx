@@ -2,7 +2,6 @@
 import { getOrder } from '../../services/apiRestaurant';
 import { useLoaderData } from 'react-router-dom';
 import OrderItem from './OrderItem';
-
 import {
   calcMinutesLeft,
   formatCurrency,
@@ -25,51 +24,84 @@ function Order() {
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
 
   return (
-    <div className="space-y-8 px-4 py-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-semibold">Order #{id} status</h2>
+    <div className="py-8 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+        {/* Order Header */}
+        <div className="card p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-bold text-stone-800 mb-2">
+                Order #{id}
+              </h2>
+              <p className="text-stone-600">Track your order status</p>
+            </div>
 
-        <div className="space-x-2">
-          {priority && (
-            <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-semibold uppercase text-red-50">
-              Priority
-            </span>
-          )}
-          <span className="rounded-full bg-green-500 px-3 py-1 text-sm font-semibold uppercase text-red-50">
-            {status} order
-          </span>
+            <div className="flex flex-wrap gap-3">
+              {priority && (
+                <span className="badge-warning">
+                  ⚡ Priority Order
+                </span>
+              )}
+              <span className="badge-success">
+                {status} order
+              </span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-stone-200 px-6 py-5">
-        <p className="font-medium">
-          {deliveryIn >= 0
-            ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
-            : 'Order should have arrived'}
-        </p>
-        <p className="text-sm text-stone-500">
-          (Estimated delivery: {formatDate(estimatedDelivery)})
-        </p>
-      </div>
+        {/* Delivery Status */}
+        <div className="card p-6 bg-gradient-to-r from-green-50 to-green-100 border-green-200">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">
+                {deliveryIn >= 0 ? '🚚' : '✅'}
+              </span>
+              <div>
+                <p className="font-semibold text-stone-800 text-lg">
+                  {deliveryIn >= 0
+                    ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
+                    : 'Order should have arrived'}
+                </p>
+                <p className="text-sm text-stone-600">
+                  Estimated delivery: {formatDate(estimatedDelivery)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <ul className="divide-y divide-stone-200 border-b border-t">
-        {cart.map((item) => (
-          <OrderItem item={item} key={item.pizzaId} />
-        ))}
-      </ul>
+        {/* Order Items */}
+        <div className="card p-6">
+          <h3 className="text-xl font-bold text-stone-800 mb-4">Order Items</h3>
+          <div className="space-y-4">
+            {cart.map((item) => (
+              <OrderItem item={item} key={item.pizzaId} />
+            ))}
+          </div>
+        </div>
 
-      <div className="space-y-2 bg-stone-200 px-6 py-5">
-        <p className="text-sm font-medium text-stone-600">
-          Price pizza: {formatCurrency(orderPrice)}
-        </p>
-        {priority && (
-          <p className="text-sm font-medium text-stone-600">
-            Price priority: {formatCurrency(priorityPrice)}
-          </p>
-        )}
-        <p className="font-bold">
-          To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
-        </p>
+        {/* Order Summary */}
+        <div className="card p-6 bg-gradient-to-r from-stone-50 to-stone-100">
+          <h3 className="text-xl font-bold text-stone-800 mb-4">Order Summary</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-stone-600">Pizza Total:</span>
+              <span className="font-semibold">{formatCurrency(orderPrice)}</span>
+            </div>
+            {priority && (
+              <div className="flex justify-between">
+                <span className="text-stone-600">Priority Fee:</span>
+                <span className="font-semibold text-orange-600">{formatCurrency(priorityPrice)}</span>
+              </div>
+            )}
+            <div className="border-t border-stone-200 pt-3">
+              <div className="flex justify-between">
+                <span className="font-bold text-lg">Total to pay on delivery:</span>
+                <span className="font-bold text-lg text-gradient">{formatCurrency(orderPrice + priorityPrice)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -6,30 +6,6 @@ import { getCart, clearCart } from './cartSlice';
 import { getUser } from '../user/userSlice';
 import EmptyCart from './EmptyCart';
 
-// const fakeCart = [
-//   {
-//     pizzaId: 12,
-//     name: 'Mediterranean',
-//     quantity: 2,
-//     unitPrice: 16,
-//     totalPrice: 32,
-//   },
-//   {
-//     pizzaId: 6,
-//     name: 'Vegetable',
-//     quantity: 1,
-//     unitPrice: 13,
-//     totalPrice: 13,
-//   },
-//   {
-//     pizzaId: 11,
-//     name: 'Spinach and Mushroom',
-//     quantity: 1,
-//     unitPrice: 15,
-//     totalPrice: 15,
-//   },
-// ];
-
 function Cart() {
   const dispatch = useDispatch();
 
@@ -38,31 +14,46 @@ function Cart() {
   }
 
   const username = useSelector(getUser);
-
   const cart = useSelector(getCart);
 
   if (!cart.length) return <EmptyCart />;
 
   return (
-    <div className="px-4 py-3">
-      <LinkButton to="/menu">&larr; Back to menu</LinkButton>
+    <div className="py-4 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <LinkButton to="/menu" className="mb-4 sm:mb-6">
+            ← Back to Menu
+          </LinkButton>
 
-      <h2 className="mt-7 text-xl font-semibold">Your cart, {username}</h2>
+          <div className="card p-4 sm:p-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-stone-800 mb-2">
+              Your Cart, {username} 🛒
+            </h2>
+            <p className="text-sm sm:text-base text-stone-600">
+              Review your order before checkout
+            </p>
+          </div>
+        </div>
 
-      <ul className="mt-3 divide-y divide-stone-200 border-b">
-        {cart.map((item) => (
-          <CartItem item={item} key={item.pizzaId} />
-        ))}
-      </ul>
+        <div className="card p-3 sm:p-6 mb-4 sm:mb-6">
+          <ul className="space-y-3 sm:space-y-4">
+            {cart.map((item) => (
+              <CartItem item={item} key={item.pizzaId} />
+            ))}
+          </ul>
+        </div>
 
-      <div className="mt-6 space-x-2">
-        <Button to="/order/new" type="primary">
-          Order pizzas
-        </Button>
-
-        <Button type="secondary" onClick={handleClearCart}>
-          Clear cart
-        </Button>
+        <div className="card p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <Button to="/order/new" type="primary" className="flex-1 order-2 sm:order-1">
+              🚀 Order Pizzas
+            </Button>
+            <Button type="secondary" onClick={handleClearCart} className="flex-1 order-1 sm:order-2">
+              🗑️ Clear Cart
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

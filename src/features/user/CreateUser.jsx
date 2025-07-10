@@ -19,24 +19,38 @@ function CreateUser() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <p className="mb-4 text-sm text-stone-600 md:text-base">
-        👋 Welcome! Please start by telling us your name:
-      </p>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="text-center">
+        <p className="text-lg text-stone-600 mb-6">
+          👋 Welcome! Please start by telling us your name:
+        </p>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Your full name"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="input mb-8 w-72"
-      />
-
-      {username !== '' && (
-        <div>
-          <Button type="primary">Start ordering</Button>
+      <div className="space-y-4">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Your full name"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="input w-full text-center text-lg"
+            autoFocus
+          />
+          {username && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <span className="text-green-500 text-xl">✓</span>
+            </div>
+          )}
         </div>
-      )}
+
+        {username !== '' && (
+          <div className="scale-in">
+            <Button type="primary" className="w-full text-lg py-4">
+              🚀 Start Ordering
+            </Button>
+          </div>
+        )}
+      </div>
     </form>
   );
 }

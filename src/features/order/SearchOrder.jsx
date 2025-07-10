@@ -14,13 +14,21 @@ function SearchOrder() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        placeholder="Search Order"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="bg-yell duration w-28 rounded-full px-4 py-2 text-sm transition-all placeholder:text-stone-400 focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-opacity-50 sm:w-64 sm:focus:w-72"
-      />
+    <form onSubmit={handleSubmit} className="relative">
+      <div className="relative">
+        <input
+          placeholder="Search order by ID..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="input w-32 sm:w-48 lg:w-64 pr-10 text-sm transition-all duration-300 focus:w-40 sm:focus:w-56 lg:focus:w-72"
+        />
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-stone-600 transition-colors duration-200"
+        >
+          🔍
+        </button>
+      </div>
     </form>
   );
 }

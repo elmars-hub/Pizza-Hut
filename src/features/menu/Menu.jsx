@@ -6,11 +6,24 @@ function Menu() {
   const menu = useLoaderData();
 
   return (
-    <ul className="divide-y divide-stone-200 px-2">
-      {menu.map((pizza) => (
-        <MenuItem pizza={pizza} key={pizza.id} />
-      ))}
-    </ul>
+    <div className="py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-stone-800 mb-4">
+            Our Delicious Menu
+          </h1>
+          <p className="text-lg text-stone-600">
+            Choose from our selection of handcrafted pizzas
+          </p>
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {menu.map((pizza) => (
+            <MenuItem pizza={pizza} key={pizza.id} />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

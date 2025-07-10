@@ -6,7 +6,12 @@ function Username() {
   if (!username) return null;
 
   return (
-    <div className="hidden text-sm font-semibold md:block">{username}</div>
+    <div className="flex items-center gap-2">
+      <span className="text-lg">👤</span>
+      <span className="hidden text-sm font-semibold text-stone-800 md:block">
+        {username}
+      </span>
+    </div>
   );
 }
 

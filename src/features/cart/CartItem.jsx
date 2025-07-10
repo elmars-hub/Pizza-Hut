@@ -10,20 +10,40 @@ function CartItem({ item }) {
   const currentQuantity = useSelector(getCurrentQuantityById(pizzaId));
 
   return (
-    <li className="py-3 sm:flex sm:items-center sm:justify-between">
-      <p className="mb-1 sm:mb-0">
-        {quantity}&times; {name}
-      </p>
-      <div className="flex items-center justify-between sm:gap-6">
-        <p className="text-sm font-bold">{formatCurrency(totalPrice)}</p>
+    <div className="card p-3 sm:p-4 hover:shadow-lg transition-all duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <span className="text-xl sm:text-2xl">🍕</span>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-stone-800 text-sm sm:text-base truncate">{name}</h3>
+              <p className="text-xs sm:text-sm text-stone-600">
+                Quantity: {quantity}
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <UpdateItemQuantity
-          pizzaId={pizzaId}
-          currentQuantity={currentQuantity}
-        />
-        <DeleteItem pizzaId={pizzaId} />
+        <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+          <div className="text-right">
+            <p className="text-base sm:text-lg font-bold text-gradient">
+              {formatCurrency(totalPrice)}
+            </p>
+            <p className="text-xs sm:text-sm text-stone-500">
+              {formatCurrency(totalPrice / quantity)} each
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <UpdateItemQuantity
+              pizzaId={pizzaId}
+              currentQuantity={currentQuantity}
+            />
+            <DeleteItem pizzaId={pizzaId} />
+          </div>
+        </div>
       </div>
-    </li>
+    </div>
   );
 }
 

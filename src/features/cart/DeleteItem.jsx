@@ -10,8 +10,12 @@ const DeleteItem = ({ pizzaId }) => {
   }
 
   return (
-    <Button type="small" onClick={handleDelete}>
-      Delete
+    <Button 
+      type="round" 
+      onClick={handleDelete}
+      className="w-8 h-8 p-0 flex items-center justify-center bg-gradient-to-r from-red-400 to-red-500 hover:from-red-300 hover:to-red-400 text-white"
+    >
+      🗑️
     </Button>
   );
 };
