@@ -6,10 +6,8 @@ import Loader from './Loader';
 function AppLayout() {
   const navigation = useNavigation();
   const location = useLocation();
-  // // Check if the current route is loading
   const isLoading = navigation.state === 'loading';
 
-  // Hide CartOverview when user is on order pages or cart page
   const isOrderPage = location.pathname.startsWith('/order');
   const isCartPage = location.pathname === '/cart';
 
