@@ -18,7 +18,16 @@ const isValidPhone = (str) =>
 function CreateOrder() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === 'submitting';
-  const username = useSelector(getUser);
+  const {
+    username,
+    status: addressStatus,
+    position,
+    address,
+    error: errorAddress,
+  } = useSelector((state) => state.user);
+
+  const isLoadingAddress = addressStatus === 'loading';
+
   const dispatch = useDispatch();
 
   const formErrors = useActionData();
@@ -32,18 +41,18 @@ function CreateOrder() {
   if (!cart.length) return <EmptyCart />;
 
   return (
-    <div className="py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="card p-8 mb-8">
-          <h2 className="text-3xl font-bold text-stone-800 mb-2">
+    <div className="px-4 py-8">
+      <div className="mx-auto max-w-2xl">
+        <div className="card mb-8 p-8">
+          <h2 className="mb-2 text-3xl font-bold text-stone-800">
             Ready to order? Let's go! 🚀
           </h2>
-          <p className="text-stone-600 mb-6">
+          <p className="mb-6 text-stone-600">
             Complete your order details below
           </p>
 
-          <Button 
-            type="secondary" 
+          <Button
+            type="secondary"
             onClick={() => dispatch(fetchAddress())}
             className="mb-6"
           >
@@ -55,7 +64,7 @@ function CreateOrder() {
           <Form method="POST" action="/order/new" className="space-y-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-stone-700 mb-2">
+                <label className="mb-2 block text-sm font-semibold text-stone-700">
                   Full Name
                 </label>
                 <input
@@ -68,36 +77,60 @@ function CreateOrder() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-stone-700 mb-2">
+                <label className="mb-2 block text-sm font-semibold text-stone-700">
                   Phone Number
                 </label>
-                <input 
-                  className="input w-full" 
-                  type="tel" 
-                  name="phone" 
-                  required 
+                <input
+                  className="input w-full"
+                  type="tel"
+                  name="phone"
+                  required
                 />
                 {formErrors?.phone && (
-                  <p className="mt-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                  <p className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
                     {formErrors.phone}
                   </p>
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-stone-700 mb-2">
+              <div className="relative">
+                <label className="mb-2 block text-sm font-semibold text-stone-700">
                   Delivery Address
                 </label>
                 <input
                   type="text"
                   name="address"
+                  disabled={isLoadingAddress}
                   required
                   className="input w-full"
+                  defaultValue={address}
                 />
+
+                {!position.latitude && !position.longitude && (
+                  <span className="absolute right-1 top-[36px] z-50">
+                    <Button
+                      disabled={isLoadingAddress}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(fetchAddress());
+                      }}
+                      type="small"
+                      className="mb-6"
+                    >
+                      📍 Get My Location
+                    </Button>
+                  </span>
+                )}
+
+                {addressStatus === 'error' && (
+                  <p className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                    {errorAddress}
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="card p-4 bg-stone-50">
+            <div className="card bg-stone-50 p-4">
               <div className="flex items-center gap-3">
                 <input
                   className="h-5 w-5 accent-yellow-500 focus:ring-2 focus:ring-yellow-400"
@@ -107,37 +140,61 @@ function CreateOrder() {
                   value={withPriority}
                   onChange={(e) => setWithPriority(e.target.checked)}
                 />
-                <label htmlFor="priority" className="font-semibold text-stone-800">
+                <label
+                  htmlFor="priority"
+                  className="font-semibold text-stone-800"
+                >
                   Want to give your order priority? (20% additional cost)
                 </label>
               </div>
             </div>
 
-            <div className="card p-4 bg-gradient-to-r from-yellow-50 to-yellow-100">
+            <div className="card bg-gradient-to-r from-yellow-50 to-yellow-100 p-4">
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-stone-600">Cart Total:</span>
-                  <span className="font-semibold">{formatCurrency(totalCartPrice)}</span>
+                  <span className="font-semibold">
+                    {formatCurrency(totalCartPrice)}
+                  </span>
                 </div>
                 {withPriority && (
                   <div className="flex justify-between">
                     <span className="text-stone-600">Priority Fee:</span>
-                    <span className="font-semibold text-orange-600">{formatCurrency(priorityPrice)}</span>
+                    <span className="font-semibold text-orange-600">
+                      {formatCurrency(priorityPrice)}
+                    </span>
                   </div>
                 )}
                 <div className="border-t border-stone-200 pt-2">
                   <div className="flex justify-between">
-                    <span className="font-bold text-lg">Total:</span>
-                    <span className="font-bold text-lg text-gradient">{formatCurrency(totalPrice)}</span>
+                    <span className="text-lg font-bold">Total:</span>
+                    <span className="text-gradient text-lg font-bold">
+                      {formatCurrency(totalPrice)}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
             <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-            
-            <Button type="primary" disabled={isSubmitting} className="w-full text-lg py-4">
-              {isSubmitting ? 'Placing order...' : `Order now for ${formatCurrency(totalPrice)}`}
+
+            <input
+              type="hidden"
+              name="position"
+              value={
+                position.longitude && position.latitude
+                  ? `${position.latitude}, ${position.longitude}`
+                  : ''
+              }
+            />
+            <Button
+              type="primary"
+              disabled={isSubmitting || isLoadingAddress}
+              className="w-full py-4 text-lg"
+            >
+              {isSubmitting
+                ? 'Placing order...'
+                : `Order now for ${formatCurrency(totalPrice)}`}
             </Button>
           </Form>
         </div>
